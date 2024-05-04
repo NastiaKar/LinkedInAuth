@@ -28,6 +28,25 @@ builder.Services.AddAuthentication().AddOAuth("LinkedIn", options =>
     options.AuthorizationEndpoint = "https://www.linkedin.com/oauth/v2/authorization";
     options.TokenEndpoint = "https://www.linkedin.com/oauth/v2/accessToken";
     options.UserInformationEndpoint = "https://api.linkedin.com/v2/me";
+    options.Scope.Add("profile");
+    options.Scope.Add("email");
+    options.SaveTokens = true;
+
+	options.Events = new OAuthEvents
+    {
+        OnCreatingTicket = async context =>
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, context.Options.UserInformationEndpoint);
+            request.Headers.Add("x-li-format", "json");
+            request.Headers.Add("Authorization", $"Bearer {context.AccessToken}");
+
+            var response = await context.Backchannel.SendAsync(request, context.HttpContext.RequestAborted);
+            response.EnsureSuccessStatusCode();
+
+            var user = JsonDocument.Parse(await response.Content.ReadAsStringAsync()).RootElement;
+            context.RunClaimActions(user);
+        }
+    };
 });
 
 var app = builder.Build();
