@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkedInAuth.MVC", "LinkedInAuth.MVC\LinkedInAuth.MVC.csproj", "{CB2557EE-6BD1-4D6B-8D4F-EFF6A96A853F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkedInAuth.WebAPI", "LinkedInAuth.WebAPI\LinkedInAuth.WebAPI.csproj", "{5C1CC897-562B-49CA-BEFC-F1A35B96611B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CB2557EE-6BD1-4D6B-8D4F-EFF6A96A853F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB2557EE-6BD1-4D6B-8D4F-EFF6A96A853F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB2557EE-6BD1-4D6B-8D4F-EFF6A96A853F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB2557EE-6BD1-4D6B-8D4F-EFF6A96A853F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C1CC897-562B-49CA-BEFC-F1A35B96611B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C1CC897-562B-49CA-BEFC-F1A35B96611B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C1CC897-562B-49CA-BEFC-F1A35B96611B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C1CC897-562B-49CA-BEFC-F1A35B96611B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B1D31344-3361-472E-AC86-A83DF4BD7CC5}
+	EndGlobalSection
+EndGlobal
