@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using System.Text.Json;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OAuth;
@@ -5,11 +7,12 @@ using Microsoft.AspNetCore.Authentication.OAuth;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddHttpsRedirection(options => 
+    options.HttpsPort = 443);
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -19,7 +22,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.Cookie.Name = "auth-token";
     });
 
-
 builder.Services.AddAuthentication().AddOAuth("LinkedIn", options =>
 {
     options.ClientId = builder.Configuration["LinkedIn:ClientId"];
@@ -27,12 +29,13 @@ builder.Services.AddAuthentication().AddOAuth("LinkedIn", options =>
     options.CallbackPath = "/signin-linkedin";
     options.AuthorizationEndpoint = "https://www.linkedin.com/oauth/v2/authorization";
     options.TokenEndpoint = "https://www.linkedin.com/oauth/v2/accessToken";
-    options.UserInformationEndpoint = "https://api.linkedin.com/v2/me";
-    options.Scope.Add("profile");
+    options.UserInformationEndpoint = "https://api.linkedin.com/v2/userinfo";
+    options.Scope.Add("openid");
     options.Scope.Add("email");
+    options.Scope.Add("profile");
     options.SaveTokens = true;
 
-	options.Events = new OAuthEvents
+    options.Events = new OAuthEvents
     {
         OnCreatingTicket = async context =>
         {
@@ -44,6 +47,10 @@ builder.Services.AddAuthentication().AddOAuth("LinkedIn", options =>
             response.EnsureSuccessStatusCode();
 
             var user = JsonDocument.Parse(await response.Content.ReadAsStringAsync()).RootElement;
+            var email = user.GetProperty("email").GetString();
+            var identity = (ClaimsIdentity)context.Principal.Identity;
+            identity.AddClaim(new Claim(ClaimTypes.Name, email));
+            
             context.RunClaimActions(user);
         }
     };
@@ -74,8 +81,6 @@ app.Map("/logout", appBuilder =>
         context.Response.Redirect("/");
     });
 });
-
-app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
